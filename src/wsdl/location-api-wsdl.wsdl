@@ -418,10 +418,10 @@
   </wsdl:binding>
   <wsdl:service name="Service_1_0">
     <wsdl:port name="BasicHttpBinding_Service_1_0" binding="tns:BasicHttpBinding_Service_1_0">
-      <soap:address location="https://ws.dev.aramex.net/ShippingAPI/Location/Service_1_0.svc" />
+      <soap:address location="https://ws.sbx.aramex.net/ShippingAPI/Location/Service_1_0.svc" />
     </wsdl:port>
     <wsdl:port name="BasicHttpBinding_Service_1_01" binding="tns:BasicHttpBinding_Service_1_01">
-      <soap:address location="http://ws.dev.aramex.net/ShippingAPI/Location/Service_1_0.svc" />
+      <soap:address location="http://ws.sbx.aramex.net/ShippingAPI/Location/Service_1_0.svc" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

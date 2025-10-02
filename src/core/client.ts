@@ -18,10 +18,10 @@ export class AramexClient {
 
   private readonly endpoints = {
     test: {
-      shipping: 'https://ws.dev.aramex.net/shippingapi.v2/shipping/service_1_0.svc',
-      tracking: 'https://ws.dev.aramex.net/shippingapi.v2/tracking/service_1_0.svc',
-      rate: 'https://ws.dev.aramex.net/shippingapi.v2/ratecalculator/service_1_0.svc',
-      location: 'https://ws.dev.aramex.net/shippingapi.v2/location/service_1_0.svc',
+      shipping: 'https://ws.sbx.aramex.net/shippingapi.v2/shipping/service_1_0.svc',
+      tracking: 'https://ws.sbx.aramex.net/shippingapi.v2/tracking/service_1_0.svc',
+      rate: 'https://ws.sbx.aramex.net/shippingapi.v2/ratecalculator/service_1_0.svc',
+      location: 'https://ws.sbx.aramex.net/shippingapi.v2/location/service_1_0.svc',
     },
     production: {
       shipping: 'https://ws.aramex.net/shippingapi.v2/shipping/service_1_0.svc',

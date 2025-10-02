@@ -111,7 +111,7 @@ describe('AramexClient', () => {
       const callArgs = mockedSoap.createClient.mock.calls[0];
       expect(callArgs[1]).toEqual(
         expect.objectContaining({
-          endpoint: 'https://ws.dev.aramex.net/shippingapi.v2/shipping/service_1_0.svc',
+          endpoint: 'https://ws.sbx.aramex.net/shippingapi.v2/shipping/service_1_0.svc',
         }),
       );
     });
