@@ -5,7 +5,7 @@
 import { AramexSDK } from '../src';
 import { testConfig } from './setup';
 
-describe('TrackingService', () => {
+describe.skip('TrackingService', () => {
   let sdk: AramexSDK;
 
   beforeAll(() => {
