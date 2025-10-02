@@ -1,0 +1,123 @@
+name: Auto Merge
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+  check_suite:
+    types:
+      - completed
+  status: {}
+
+jobs:
+  auto-approve-dependabot:
+    name: Auto Approve Dependabot PRs
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-approve Dependabot PRs
+        if: |
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on major updates
+        if: steps.metadata.outputs.update-type == 'version-update:semver-major'
+        run: |
+          gh pr comment "$PR_URL" --body "This is a major version update. Please review manually before merging."
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  auto-merge:
+    name: Auto Merge PRs
+    runs-on: ubuntu-latest
+    needs: auto-approve-dependabot
+    if: |
+      github.event_name == 'pull_request' &&
+      (github.actor == 'dependabot[bot]' || contains(github.event.pull_request.labels.*.name, 'auto-merge'))
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - name: Check PR status
+        id: pr-status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+
+            // Check if PR is mergeable
+            if (pr.mergeable_state !== 'clean') {
+              core.setOutput('can_merge', 'false');
+              core.info(`PR is not in clean state: ${pr.mergeable_state}`);
+              return;
+            }
+
+            // Check if all checks passed
+            const { data: checks } = await github.rest.checks.listForRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: pr.head.sha
+            });
+
+            const allChecksPassed = checks.check_runs.every(check =>
+              check.status === 'completed' && check.conclusion === 'success'
+            );
+
+            if (!allChecksPassed) {
+              core.setOutput('can_merge', 'false');
+              core.info('Not all checks have passed');
+              return;
+            }
+
+            // Check if PR is approved
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+
+            const isApproved = reviews.some(review => review.state === 'APPROVED');
+
+            if (!isApproved) {
+              core.setOutput('can_merge', 'false');
+              core.info('PR is not approved');
+              return;
+            }
+
+            core.setOutput('can_merge', 'true');
+
+      - name: Enable auto-merge
+        if: steps.pr-status.outputs.can_merge == 'true'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on merge failure
+        if: failure()
+        run: |
+          gh pr comment "$PR_URL" --body "Auto-merge failed. Please check the PR status and merge manually."
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

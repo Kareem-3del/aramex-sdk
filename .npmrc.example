@@ -1,0 +1,15 @@
+# NPM Configuration Example
+# Copy this file to .npmrc and update with your values
+# DO NOT commit .npmrc to git (it's in .gitignore)
+
+# Registry (default)
+registry=https://registry.npmjs.org/
+
+# Access level for scoped packages
+access=public
+
+# Tag for publishing (default is 'latest')
+tag=latest
+
+# Enable provenance for security (requires GitHub Actions)
+# provenance=true
