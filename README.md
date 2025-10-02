@@ -389,6 +389,8 @@ npm run test:watch
 npm run test:coverage
 ```
 
+**Note**: Integration tests that require actual API access are skipped by default. To run them, you need valid Aramex API credentials and should change `describe.skip` to `describe` in the integration test files (`rate.test.ts`, `location.test.ts`, `tracking.test.ts`, `shipping.test.ts`).
+
 ## Building
 
 ```bash
