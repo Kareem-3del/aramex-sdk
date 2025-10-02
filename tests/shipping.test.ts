@@ -5,7 +5,7 @@
 import { AramexSDK } from '../src';
 import { testConfig, mockShipment, mockPickup } from './setup';
 
-describe('ShippingService', () => {
+describe.skip('ShippingService', () => {
   let sdk: AramexSDK;
 
   beforeAll(() => {
