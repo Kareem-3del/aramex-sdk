@@ -106,7 +106,7 @@ export interface ProcessedShipment {
 export interface CreateShipmentsRequest {
   ClientInfo: ClientInfo;
   Transaction?: Transaction;
-  Shipments: Shipment[];
+  Shipments: Shipment[] | { Shipment: Shipment[] };  // Support both formats for SOAP compatibility
   LabelInfo?: LabelInfo;
 }
 

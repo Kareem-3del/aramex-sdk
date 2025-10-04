@@ -5,6 +5,7 @@ Complete TypeScript SDK for Aramex API with support for all Aramex services incl
 ## Features
 
 - ✅ **Complete Coverage**: All Aramex API services (Shipping, Tracking, Rate, Location)
+- ✅ **Helper Functions**: NEW! Easy-to-use shipment builders for quick integration
 - ✅ **TypeScript**: Full TypeScript support with comprehensive type definitions
 - ✅ **Framework Agnostic**: Works with any Node.js application
 - ✅ **NestJS Integration**: First-class NestJS support with decorators and modules
@@ -25,7 +26,50 @@ yarn add @kareem-3del/aramex-sdk
 
 ## Quick Start
 
-### Standalone Usage
+### Easy Way (Using Helpers) ⭐ NEW!
+
+```typescript
+import { AramexSDK, buildDomesticShipment } from '@kareem-3del/aramex-sdk';
+
+const aramex = new AramexSDK({
+  username: 'your_username@example.com',
+  password: 'your_password',
+  accountNumber: 'your_account_number',
+  accountPin: 'your_pin',
+  accountEntity: 'DXB',
+  accountCountryCode: 'AE',
+  testMode: true
+});
+
+// Create shipment with minimal code!
+const shipment = buildDomesticShipment({
+  reference: 'ORDER-123',
+  accountNumber: 'your_account_number',
+
+  fromName: 'My Store',
+  fromAddress: 'Store Address',
+  fromCity: 'Dubai',
+  fromPhone: '+971-4-1234567',
+
+  toName: 'Customer Name',
+  toAddress: 'Customer Address',
+  toCity: 'Abu Dhabi',
+  toPhone: '+971-2-7654321',
+
+  weight: 2.5,
+  description: 'Electronics'
+});
+
+const result = await aramex.shipping.createShipment(shipment, {
+  ReportID: 9201,
+  ReportType: 'URL'
+});
+
+console.log('Shipment ID:', result.Shipments[0].ID);
+console.log('Label URL:', result.Shipments[0].ShipmentLabel?.LabelURL);
+```
+
+### Advanced Usage (Full Control)
 
 ```typescript
 import { AramexSDK } from '@kareem-3del/aramex-sdk';
@@ -41,9 +85,10 @@ const aramex = new AramexSDK({
   timeout: 30000 // Optional: Request timeout in milliseconds (default: 30000)
 });
 
-// Create a shipment
+// Create a shipment with full control
 const shipment = await aramex.shipping.createShipment({
   Shipper: {
+    AccountNumber: 'your_account_number',
     PartyAddress: {
       Line1: '123 Business Street',
       City: 'Dubai',

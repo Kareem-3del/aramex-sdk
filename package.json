@@ -1,6 +1,6 @@
 {
   "name": "@kareem-3del/aramex-sdk",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Complete Aramex API SDK for Node.js - Shipping, Tracking, Rate Calculator, and Location Services",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

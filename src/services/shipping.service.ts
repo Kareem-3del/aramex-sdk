@@ -45,7 +45,7 @@ export class ShippingService {
     const request: CreateShipmentsRequest = {
       ClientInfo: this.client.getClientInfo(),
       Transaction: transaction,
-      Shipments: shipments,
+      Shipments: { Shipment: shipments },  // Fixed: Wrap array with proper element name
       LabelInfo: labelInfo,
     };
 

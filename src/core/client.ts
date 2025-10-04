@@ -105,6 +105,15 @@ export class AramexClient {
       }
 
       client[method](request, (err: Error | null, result: unknown) => {
+        // Log the actual SOAP request/response XML
+        if (process.env.DEBUG_SOAP === 'true') {
+          console.log('\n━━━━ SOAP REQUEST XML ━━━━');
+          console.log(client.lastRequest);
+          console.log('\n━━━━ SOAP RESPONSE XML ━━━━');
+          console.log(client.lastResponse);
+          console.log('━━━━━━━━━━━━━━━━━━━━━━━━\n');
+        }
+
         if (err) {
           const enhancedError = new Error(
             `SOAP call failed: ${service}.${method} - ${err.message}`
@@ -114,7 +123,27 @@ export class AramexClient {
         } else {
           // Extract the result from SOAP envelope
           const resultObj = result as Record<string, unknown>;
-          const methodResult = resultObj[`${method}Result`] || result;
+          let methodResult = resultObj[`${method}Result`] || result;
+
+          // Fix SOAP array wrapping: ProcessedShipment should be an array
+          if (methodResult && typeof methodResult === 'object') {
+            const typed = methodResult as any;
+
+            // Fix Shipments.ProcessedShipment array
+            if (typed.Shipments?.ProcessedShipment) {
+              typed.Shipments = Array.isArray(typed.Shipments.ProcessedShipment)
+                ? typed.Shipments.ProcessedShipment
+                : [typed.Shipments.ProcessedShipment];
+            }
+
+            // Fix Notifications.Notification array
+            if (typed.Notifications?.Notification) {
+              typed.Notifications = Array.isArray(typed.Notifications.Notification)
+                ? typed.Notifications.Notification
+                : [typed.Notifications.Notification];
+            }
+          }
+
           resolve(methodResult as TResponse);
         }
       });

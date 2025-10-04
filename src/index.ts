@@ -45,5 +45,8 @@ export * from './services';
 // Types
 export * from './types';
 
+// Helpers
+export * from './helpers';
+
 // Default export
 export { AramexSDK as default } from './aramex-sdk';
