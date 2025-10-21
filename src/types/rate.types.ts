@@ -23,9 +23,16 @@ export interface ShipmentForRate {
     NumberOfPieces: number;
     ProductGroup: ProductGroup;
     ProductType?: ProductType;
+    PaymentType?: string;
+    PaymentOptions?: string;
     ChargeableWeight?: Weight;
     DescriptionOfGoods?: string;
     GoodsOriginCountry?: string;
+    CustomsValueAmount?: Money;
+    CashOnDeliveryAmount?: Money;
+    InsuranceAmount?: Money;
+    CashAdditionalAmount?: Money;
+    CollectAmount?: Money;
   };
   PreferredCurrencyCode?: string;
 }

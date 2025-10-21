@@ -10,6 +10,7 @@ import {
   CalculateRateResponse,
   Transaction,
 } from '../types';
+import { normalizeAddress, normalizeShipmentForRate } from '../helpers/request-normalizer';
 
 export class RateService {
   constructor(private readonly client: AramexClient) {}
@@ -22,9 +23,14 @@ export class RateService {
   async calculateRate(
     request: Omit<CalculateRateRequest, 'ClientInfo'>,
   ): Promise<CalculateRateResponse> {
+    // Normalize addresses and shipment details to match WSDL field order
     const fullRequest: CalculateRateRequest = {
       ClientInfo: this.client.getClientInfo(),
-      ...request,
+      Transaction: request.Transaction,
+      OriginAddress: normalizeAddress(request.OriginAddress),
+      DestinationAddress: normalizeAddress(request.DestinationAddress),
+      ShipmentDetails: normalizeShipmentForRate(request.ShipmentDetails),
+      PreferredCurrencyCode: request.PreferredCurrencyCode,
     };
 
     const response = await this.client.callSoapMethod<

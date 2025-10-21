@@ -56,7 +56,7 @@ describe('ShippingService Unit Tests', () => {
         'shipping',
         'CreateShipments',
         expect.objectContaining({
-          Shipments: [mockShipment],
+          Shipments: { Shipment: [mockShipment] },
           ClientInfo: expect.any(Object),
         }),
       );
@@ -153,7 +153,7 @@ describe('ShippingService Unit Tests', () => {
         'shipping',
         'CreateShipments',
         expect.objectContaining({
-          Shipments: shipments,
+          Shipments: { Shipment: shipments },
         }),
       );
       expect(result.Shipments).toHaveLength(2);
