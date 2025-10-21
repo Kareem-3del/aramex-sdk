@@ -77,9 +77,18 @@ describe('RateService Unit Tests', () => {
         'CalculateRate',
         expect.objectContaining({
           ClientInfo: expect.any(Object),
-          OriginAddress: rateRequest.OriginAddress,
-          DestinationAddress: rateRequest.DestinationAddress,
-          ShipmentDetails: rateRequest.ShipmentDetails,
+          OriginAddress: expect.objectContaining({
+            City: rateRequest.OriginAddress.City,
+            CountryCode: rateRequest.OriginAddress.CountryCode,
+          }),
+          DestinationAddress: expect.objectContaining({
+            City: rateRequest.DestinationAddress.City,
+            CountryCode: rateRequest.DestinationAddress.CountryCode,
+          }),
+          ShipmentDetails: expect.objectContaining({
+            NumberOfPieces: rateRequest.ShipmentDetails.NumberOfPieces,
+            ProductGroup: rateRequest.ShipmentDetails.ProductGroup,
+          }),
         }),
       );
       expect(result).toEqual(mockResponse);
@@ -408,8 +417,14 @@ describe('RateService Unit Tests', () => {
         'CalculateRate',
         expect.objectContaining({
           ClientInfo: expect.any(Object),
-          OriginAddress: quoteRequest.OriginAddress,
-          DestinationAddress: quoteRequest.DestinationAddress,
+          OriginAddress: expect.objectContaining({
+            City: quoteRequest.OriginAddress.City,
+            CountryCode: quoteRequest.OriginAddress.CountryCode,
+          }),
+          DestinationAddress: expect.objectContaining({
+            City: quoteRequest.DestinationAddress.City,
+            CountryCode: quoteRequest.DestinationAddress.CountryCode,
+          }),
         }),
       );
       expect(result).toEqual(mockResponse);

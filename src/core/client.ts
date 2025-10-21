@@ -7,8 +7,11 @@ import { Client as SoapClient } from 'soap';
 import * as path from 'path';
 import { AramexConfig, ClientInfo } from '../types';
 
+// Helper type to make readonly properties mutable for internal use
+type Mutable<T> = { -readonly [P in keyof T]: T[P] };
+
 export class AramexClient {
-  private readonly config: AramexConfig;
+  private config: Mutable<AramexConfig>;
   private readonly wsdlPaths = {
     shipping: path.join(__dirname, '../wsdl/shipping-services-api-wsdl.wsdl'),
     tracking: path.join(__dirname, '../wsdl/shipments-tracking-api-wsdl.wsdl'),
@@ -44,7 +47,7 @@ export class AramexClient {
       source: 24,
       testMode: true,
       ...config,
-    };
+    } as AramexConfig;
   }
 
   getClientInfo(): ClientInfo {

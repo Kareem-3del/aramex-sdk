@@ -3,17 +3,17 @@
  */
 
 export interface AramexConfig {
-  username: string;
-  password: string;
-  accountNumber: string;
-  accountPin: string;
-  accountEntity: string;
-  accountCountryCode: string;
-  version?: string;
-  source?: number;
-  baseURL?: string;
-  testMode?: boolean;
-  timeout?: number; // Request timeout in milliseconds (default: 30000)
+  readonly username: string;
+  readonly password: string;
+  readonly accountNumber: string;
+  readonly accountPin: string;
+  readonly accountEntity: string;
+  readonly accountCountryCode: string;
+  readonly version?: string;
+  readonly source?: number;
+  readonly baseURL?: string;
+  readonly testMode?: boolean;
+  readonly timeout?: number; // Request timeout in milliseconds (default: 30000)
 }
 
 export interface ClientInfo {
@@ -70,26 +70,35 @@ export interface Party {
   Contact: Contact;
 }
 
+/**
+ * Weight must have Unit before Value (per WSDL)
+ */
 export interface Weight {
-  Unit: 'KG' | 'LB';
-  Value: number;
+  readonly Unit: 'KG' | 'LB';
+  readonly Value: number;
 }
 
+/**
+ * Dimensions with strict field order
+ */
 export interface Dimensions {
-  Length: number;
-  Width: number;
-  Height: number;
-  Unit: 'CM' | 'M';
+  readonly Length: number;
+  readonly Width: number;
+  readonly Height: number;
+  readonly Unit: 'CM' | 'M';
 }
 
 export interface Volume {
-  Unit: 'Cm3' | 'Inch3';
-  Value: number;
+  readonly Unit: 'Cm3' | 'Inch3';
+  readonly Value: number;
 }
 
+/**
+ * Money must have CurrencyCode before Value (per WSDL)
+ */
 export interface Money {
-  CurrencyCode: string;
-  Value: number;
+  readonly CurrencyCode: string;
+  readonly Value: number;
 }
 
 export interface Notification {

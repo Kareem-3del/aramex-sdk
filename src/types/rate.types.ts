@@ -1,5 +1,6 @@
 /**
  * Rate Calculator API types
+ * Field order must match WSDL specification exactly
  */
 
 import {
@@ -14,27 +15,35 @@ import {
   Weight,
 } from './common.types';
 
+/**
+ * Shipment details for rate calculation
+ * CRITICAL: Field order must match WSDL (Dimensions first!)
+ */
+export interface ShipmentDetailsForRate {
+  readonly Dimensions?: Dimensions;
+  readonly ActualWeight: Weight;
+  readonly ChargeableWeight?: Weight;
+  readonly DescriptionOfGoods?: string;
+  readonly GoodsOriginCountry?: string;
+  readonly NumberOfPieces: number;
+  readonly ProductGroup: ProductGroup;
+  readonly ProductType?: ProductType;
+  readonly PaymentType?: string;
+  readonly PaymentOptions?: string;
+  readonly CustomsValueAmount?: Money;
+  readonly CashOnDeliveryAmount?: Money;
+  readonly InsuranceAmount?: Money;
+  readonly CashAdditionalAmount?: Money;
+  readonly CollectAmount?: Money;
+  readonly Services?: string;
+  readonly Items?: any;
+}
+
 export interface ShipmentForRate {
-  OriginAddress: Address;
-  DestinationAddress: Address;
-  ShipmentDetails: {
-    Dimensions?: Dimensions;
-    ActualWeight: Weight;
-    NumberOfPieces: number;
-    ProductGroup: ProductGroup;
-    ProductType?: ProductType;
-    PaymentType?: string;
-    PaymentOptions?: string;
-    ChargeableWeight?: Weight;
-    DescriptionOfGoods?: string;
-    GoodsOriginCountry?: string;
-    CustomsValueAmount?: Money;
-    CashOnDeliveryAmount?: Money;
-    InsuranceAmount?: Money;
-    CashAdditionalAmount?: Money;
-    CollectAmount?: Money;
-  };
-  PreferredCurrencyCode?: string;
+  readonly OriginAddress: Address;
+  readonly DestinationAddress: Address;
+  readonly ShipmentDetails: ShipmentDetailsForRate;
+  readonly PreferredCurrencyCode?: string;
 }
 
 export interface RateLineItem {
@@ -49,13 +58,17 @@ export interface RateDetails {
   WeightCharged: Weight;
 }
 
+/**
+ * Rate calculation request
+ * Field order matches WSDL: ClientInfo, Transaction, OriginAddress, DestinationAddress, ShipmentDetails
+ */
 export interface CalculateRateRequest {
-  ClientInfo: ClientInfo;
-  Transaction?: Transaction;
-  OriginAddress: Address;
-  DestinationAddress: Address;
-  ShipmentDetails: ShipmentForRate['ShipmentDetails'];
-  PreferredCurrencyCode?: string;
+  readonly ClientInfo: ClientInfo;
+  readonly Transaction?: Transaction;
+  readonly OriginAddress: Address;
+  readonly DestinationAddress: Address;
+  readonly ShipmentDetails: ShipmentDetailsForRate;
+  readonly PreferredCurrencyCode?: string;
 }
 
 export interface CalculateRateResponse extends BaseResponse {
