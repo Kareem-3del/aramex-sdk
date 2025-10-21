@@ -64,7 +64,7 @@
     }
   },
   "dependencies": {
-    "soap": "^1.0.0",
+    "soap": "^1.5.0",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
